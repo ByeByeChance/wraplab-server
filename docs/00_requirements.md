@@ -154,12 +154,13 @@
 
 ## 七、API 接口速览（草案）
 
+> 设计原则：小程序和后台管理共享数据接口，后台独有功能通过 `/api/v1/admin/` 前缀区分，权限由 JWT role 控制。
+
+### 共享接口（小程序 + 后台均可调用）
+
 ```
 POST   /api/v1/auth/login              # 登录
 POST   /api/v1/auth/refresh            # 刷新 token
-
-GET    /api/v1/stores                  # 获取门店信息
-PUT    /api/v1/staff/{id}              # 店员管理（店长）
 
 GET    /api/v1/vehicles/brands         # 品牌列表
 GET    /api/v1/vehicles/series         # 车系列表 (?brandId=)
@@ -179,6 +180,27 @@ POST   /api/v1/quotes                  # 生成报价单
 GET    /api/v1/quotes/{id}             # 报价单详情
 
 POST   /api/v1/files/upload            # OSS 文件上传
+```
+
+### 后台专属接口（需 admin / manager 角色）
+
+```
+GET    /api/v1/admin/store             # 获取/编辑门店信息
+GET    /api/v1/admin/staff             # 店员列表
+POST   /api/v1/admin/staff             # 创建店员
+PUT    /api/v1/admin/staff/{id}        # 编辑店员
+
+POST   /api/v1/admin/vehicles/brands   # 创建品牌
+PUT    /api/v1/admin/vehicles/brands/{id} # 编辑品牌
+POST   /api/v1/admin/vehicles/series   # 创建车系
+POST   /api/v1/admin/vehicles/models   # 创建车型
+PUT    /api/v1/admin/vehicles/models/{id} # 编辑车型
+
+POST   /api/v1/admin/colors/brands     # 创建色卡品牌
+POST   /api/v1/admin/colors/swatches   # 创建颜色
+PUT    /api/v1/admin/colors/swatches/{id} # 编辑颜色
+POST   /api/v1/admin/colors/materials  # 创建材质
+PUT    /api/v1/admin/colors/materials/{id} # 编辑材质
 ```
 
 ---
