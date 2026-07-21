@@ -403,7 +403,24 @@ export class StoreScopeSubscriber implements EntitySubscriberInterface {
 | 响应格式 | `{ code: 200, message: "success", data: {...} }` |
 | 错误格式 | `{ code: 4xx/5xx, message: "错误描述", errors?: [...] }` |
 
-### 5.2 通用 Guard 链
+
+### 5.2 API 文档
+
+使用 `@nestjs/swagger` 自动生成 OpenAPI 文档，所有 DTO 和 Controller 添加 Swagger 装饰器：
+
+```typescript
+@ApiTags('车型管理')
+@Controller('vehicles')
+export class VehicleController {
+  @ApiOperation({ summary: '获取品牌列表' })
+  @Get('brands')
+  async getBrands() { ... }
+}
+```
+
+开发环境访问 `http://localhost:3000/api/docs` 查看 Swagger UI。
+
+### 5.3 通用 Guard 链
 
 ```
 Controller
@@ -413,7 +430,7 @@ Controller
   → Handler（实际业务逻辑）
 ```
 
-### 5.3 接口清单（完整版）
+### 5.4 接口清单（完整版）
 
 详见需求文档 `docs/00_requirements.md` §七。
 
@@ -569,6 +586,14 @@ npm run migration:run
 # 种子数据
 npm run seed
 
+### 数据初始化
+
+**车型数据 seed**：包含常见品牌（BBA/特斯拉/丰田等）、车系、车型。首次部署时通过 `npm run seed` 导入。
+
+**色卡数据 seed**：包含主流色卡品牌（3M/AX/HEXIS）及其颜色数据（HEX + RGB + 单价）。种子数据可从 JSON 文件读取，方便后续更新。
+
+**门店初始化**：系统首次启动时需创建默认门店和管理员账号，通过 seed 脚本或初始化 API 完成。
+
 # 测试
 npm run test
 ```
@@ -586,6 +611,9 @@ npm run test
 | 颜色存储 | HEX + RGB 分开存 | 只存 HEX | RGB 方便前端做颜色运算（调亮/调暗） |
 | 软删除 | deleted_at 字段 | 物理删除 | 业务数据安全性，方便恢复 |
 | 迁移工具 | TypeORM migrations | 手动 SQL | 和 ORM 一致，类型安全 |
+| API 文档 | @nestjs/swagger | 手动维护文档 | 自动生成，与代码同步，零维护成本 |
+| 缓存策略 | Phase 1 先直接查库，Phase 2 引入 Redis | 一开始就上缓存 | 初期数据量小，Redis 增加复杂度，后期缓存热点数据 |
+| 日志框架 | NestJS 内置 Logger | Winston / Pino | 内置 Logger 足够，区分 info/warn/error 级别，后期可切换 |
 
 ---
 
