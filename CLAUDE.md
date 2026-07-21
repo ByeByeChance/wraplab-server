@@ -53,7 +53,13 @@ wraplab-server/
 └── docs/
 ```
 
-## 五、质量门禁
+## 五、开工/收工
+
+- **开工**：读 `docs/worklog/TODO.md` + 最近 `daily/` 日志。
+- **收工**：更新 TODO + 写 `docs/worklog/daily/YYYY-MM-DD.md` + 必要时更新 `ROADMAP.md`。
+- 子 Agent 完工后必须落盘（更新进度 + 记录要点与踩坑）。不落盘视为未完成。
+
+## 六、质量门禁
 
 ```bash
 npm run test
@@ -66,7 +72,7 @@ npm run test
 - API 端点测试覆盖正常路径 + 异常路径 + 边界
 - 多租户隔离测试
 
-## 六、速查
+## 七、速查
 
 | 想了解 | 去 |
 |--------|-----|
