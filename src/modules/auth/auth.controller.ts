@@ -1,4 +1,4 @@
-import { Controller, Post, Body, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
@@ -8,10 +8,20 @@ import { RefreshTokenGuard } from './guards/refresh-token.guard';
 import { Public } from '../../common/decorators/public.decorator';
 import { StrictRate } from '../../common/decorators/rate-limit.decorator';
 import { CurrentUser, JwtPayload } from '../../common/decorators/current-user.decorator';
+import { CryptoService } from '../../common/crypto/crypto.service';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly cryptoService: CryptoService,
+  ) {}
+
+  @Public()
+  @Get('public-key')
+  getPublicKey() {
+    return { publicKey: this.cryptoService.publicKey };
+  }
 
   @Public()
   @StrictRate()

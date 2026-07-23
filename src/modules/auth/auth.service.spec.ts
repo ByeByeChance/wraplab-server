@@ -9,6 +9,7 @@ import { Staff } from '../staff/entities/staff.entity';
 import { StaffStore } from '../staff/entities/staff-store.entity';
 import { SmsService } from '../sms/sms.service';
 import { RedisService } from '../redis/redis.service';
+import { CryptoService } from '../../common/crypto/crypto.service';
 import { BusinessException } from '../../common/exceptions/business.exception';
 import * as bcrypt from 'bcryptjs';
 
@@ -98,6 +99,12 @@ describe('AuthService', () => {
               expire: jest.fn(),
               ttl: jest.fn().mockResolvedValue(900),
             }),
+          },
+        },
+        {
+          provide: CryptoService,
+          useValue: {
+            decrypt: jest.fn((value: string) => value),
           },
         },
       ],

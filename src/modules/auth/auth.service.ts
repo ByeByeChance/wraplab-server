@@ -13,6 +13,7 @@ import { SmsService } from '../sms/sms.service';
 import { RedisService } from '../redis/redis.service';
 import { BusinessException } from '../../common/exceptions/business.exception';
 import { ErrorCode } from '../../common/exceptions/error-codes';
+import { CryptoService } from '../../common/crypto/crypto.service';
 import { LoginDto } from './dto/login.dto';
 import { SmsLoginDto } from './dto/sms-login.dto';
 import { maskWechatOpenId } from '../../common/utils/sanitize';
@@ -37,6 +38,7 @@ export class AuthService {
     private readonly configService: ConfigService,
     private readonly smsService: SmsService,
     private readonly redisService: RedisService,
+    private readonly cryptoService: CryptoService,
   ) {
     this.bcryptSaltRounds = parseInt(process.env.BCRYPT_SALT_ROUNDS || '12', 10) || 12;
   }
@@ -70,7 +72,10 @@ export class AuthService {
       throw new BusinessException(ErrorCode.ACCOUNT_DISABLED, '账号已被停用');
     }
 
-    const isPasswordValid = await bcrypt.compare(dto.password, staff.password_hash);
+    const plainPassword = dto.encrypted
+      ? this.cryptoService.decrypt(dto.password)
+      : dto.password;
+    const isPasswordValid = await bcrypt.compare(plainPassword, staff.password_hash);
     if (!isPasswordValid) {
       await this.recordFailedAttempt(lockoutKey);
       throw new BusinessException(ErrorCode.LOGIN_FAILED, '手机号或密码错误');

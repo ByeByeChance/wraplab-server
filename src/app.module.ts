@@ -6,6 +6,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ConfigModule } from './config/config.module';
 import { DatabaseModule } from './database/database.module';
 import { CommonModule } from './common/common.module';
+import { CryptoModule } from './common/crypto/crypto.module';
 import { RedisModule } from './modules/redis/redis.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { VehicleModule } from './modules/vehicle/vehicle.module';
@@ -57,6 +58,7 @@ import { RateLimitLoggingGuard } from './common/guards/rate-limit-logging.guard'
     ]),
     EventEmitterModule.forRoot(),
     ScheduleModule.forRoot(),
+    CryptoModule,
     QueueModule,
     AuthModule,
     VehicleModule,
